@@ -15,9 +15,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int rollNO;
+    public Integer rollNo;
     public String name;
     public Integer age;
     @Enumerated(value=EnumType.STRING)
