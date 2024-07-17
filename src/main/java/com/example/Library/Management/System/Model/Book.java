@@ -18,6 +18,7 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int bookId;
+    @Column(unique = true)
     public String name;
     public boolean isAvailable;
     @Enumerated(value = EnumType.STRING)
