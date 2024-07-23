@@ -29,8 +29,8 @@ public class AuthorController {
             }
     }
 
-    @PutMapping("/updatename")
-    public String updatename(@RequestBody UpdateNameAndPenName updateName){
+    @PutMapping("/nameupdate")
+    public String nameupdate(@RequestBody UpdateNameAndPenName updateName){
         try{
             String result = authorService.updatename(updateName);
             return result;
@@ -38,6 +38,11 @@ public class AuthorController {
         }catch (Exception e){
             return "Author Id is invalid"+e.getMessage();
         }
+    }
+
+    @GetMapping("/getauthor")
+    public Author getauthor(@RequestParam("authorId") Integer authorId ){
+         return authorService.getauthor(authorId);
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.Date;
 @Setter
 public class AddBook{
 
-    public String title;
+    public String name;
     public Boolean isAvailable;
     public Genre genre;
     public Date publicationDate;

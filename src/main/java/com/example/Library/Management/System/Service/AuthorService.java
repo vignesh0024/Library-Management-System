@@ -39,4 +39,10 @@ public class AuthorService {
         return "Author Name and PenName has been";
 
     }
+
+
+    public Author getauthor(Integer authorid) {
+        Author author = authorRepository.findById(authorid).get();
+        return author;
+    }
 }
