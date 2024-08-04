@@ -1,13 +1,16 @@
 package com.example.Library.Management.System.Service;
 
+import com.example.Library.Management.System.Enum.Genre;
 import com.example.Library.Management.System.Model.Author;
 import com.example.Library.Management.System.Model.Book;
 import com.example.Library.Management.System.Repository.AuthorRepository;
 import com.example.Library.Management.System.Repository.BookRepository;
 import com.example.Library.Management.System.RequestDto.AddBook;
+import com.example.Library.Management.System.ResponseDto.FindBooks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,10 +46,16 @@ public class BookService {
         authorRepository.save(authorobj);
         return "Book has been successfully added and updated";
 
+    }
 
+    public List<FindBooks> findbooks(Genre genre) {
 
-
-
-
+        List<Book> booklist = bookRepository.findBooksByGenre(genre);
+        List<FindBooks> response=new ArrayList<>();
+        for(Book book:booklist){
+            FindBooks findbookresult = new FindBooks(book.getName(),book.getPrice(),book.getAuthor().getName());
+            response.add(findbookresult);
+        }
+        return response;
     }
 }

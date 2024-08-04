@@ -15,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TransactionService {
@@ -90,6 +93,45 @@ public class TransactionService {
 
         return "Transaction has been saved successfully";
 
+    }
+
+    public String retrunbook(Integer bookId,Integer cardId){
+
+        Book bookobj = bookRepository.findById(bookId).get();
+        LibraryCard cardobj = cardRepository.findById(cardId).get();
+
+        List<Transaction> transactionList = transactionRepository.findTransactionsByBookAndLibraryCardAndTransactionStatusAndTransactionType(bookobj,cardobj,TransactionStatus.SUCCESS,TransactionType.ISSUE);
+
+        Transaction latestTransaction = transactionList.get(transactionList.size()-1);
+
+        Date issuedate = latestTransaction.getCreatedAt();
+
+        long milliseconds = Math.abs(System.currentTimeMillis() - issuedate.getTime());
+        long no_of_days = TimeUnit.DAYS.convert(milliseconds,TimeUnit.MILLISECONDS);
+
+        int fineamount =0;
+        if(no_of_days > 15){
+            fineamount= (int) ((no_of_days - 15) * 5);
+        }
+
+        bookobj.setIsAvailable (Boolean.FALSE);
+        cardobj.setNoOfBooksIssued(cardobj.getNoOfBooksIssued() - 1);
+
+        Transaction transationobj = new Transaction(TransactionStatus.SUCCESS,TransactionType.RETURN,fineamount);
+
+        transationobj.setBook(bookobj);
+        transationobj.setLibraryCard(cardobj);
+
+        Transaction transactionobjwithid = TransactionRepository.save(transationobj);
+
+        bookobj.getTransactionList().add(transactionobjwithid);
+        cardobj.getTransactionList().add(transactionobjwithid);
+
+        //Saving the parents
+        bookRepository.save(book);
+        cardRepository.save(card);
+
+        return "Book has successfully been returned";
 
     }
 }
